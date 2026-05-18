@@ -2,9 +2,11 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import RouteGuard from './route-guard';
 import { ROUTES } from './routes';
 
+const routerBaseName = import.meta.env.BASE_URL === '/' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '');
+
 export default function AppRouter() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={routerBaseName}>
       <Routes>
         {ROUTES.map((route) => (
           <Route
@@ -21,4 +23,3 @@ export default function AppRouter() {
     </BrowserRouter>
   );
 }
-

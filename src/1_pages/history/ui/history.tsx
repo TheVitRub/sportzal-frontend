@@ -3,6 +3,7 @@ import { Download, Share2 } from 'lucide-react';
 import { WorkoutService } from '@entities/workout';
 import type { WorkoutDetail, WorkoutSummary } from '@entities/workout';
 import { WorkoutReadOnly } from '@widgets/workout-readonly';
+import { appPath } from '@shared/lib/app-base';
 import { formatDate } from '@shared/lib/format-date';
 import { Notice } from '@shared/ui';
 
@@ -34,7 +35,7 @@ export function HistoryPage() {
       return;
     }
     const link = await WorkoutService.createShareLink(selected.id);
-    setShareUrl(`${location.origin}/public/${link.token}`);
+    setShareUrl(`${location.origin}${appPath(`/public/${link.token}`)}`);
   }
 
   return (
@@ -91,4 +92,3 @@ export function HistoryPage() {
 }
 
 export default HistoryPage;
-
