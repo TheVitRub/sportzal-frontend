@@ -50,7 +50,7 @@ jobs:
             git reset --hard origin/main
 
             cd /home/tvr/fencing
-            docker compose up -d --build sport-frontend
+            docker compose up -d --build --no-deps sport-frontend
             docker compose ps sport-frontend
 
             curl -fsS http://127.0.0.1/sport/ >/dev/null
