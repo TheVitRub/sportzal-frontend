@@ -109,6 +109,7 @@ p {
 }
 
 .sidebar nav button,
+.sidebar nav a,
 .ghost {
   display: flex;
   align-items: center;
@@ -119,10 +120,13 @@ p {
   background: transparent;
   color: #fffdf8;
   text-align: left;
+  text-decoration: none;
 }
 
 .sidebar nav button.active,
+.sidebar nav a.active,
 .sidebar nav button:hover,
+.sidebar nav a:hover,
 .ghost:hover {
   background: #465449;
 }
@@ -170,6 +174,7 @@ p {
   min-height: 40px;
   border-radius: 8px;
   padding: 10px 14px;
+  text-decoration: none;
 }
 
 .primary {
@@ -579,4 +584,3 @@ p {
     flex-direction: column;
   }
 }
-

@@ -14,9 +14,17 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["src/0_app/*"],
+      "@pages/*": ["src/1_pages/*"],
+      "@widgets/*": ["src/2_widgets/*"],
+      "@features/*": ["src/3_features/*"],
+      "@entities/*": ["src/4_entities/*"],
+      "@shared/*": ["src/5_shared/*"]
+    }
   },
   "include": ["src"],
   "references": []
 }
-
