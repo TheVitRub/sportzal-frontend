@@ -1,0 +1,6 @@
+.git
+node_modules
+dist
+frontend.log
+.dev-port
+tsconfig.tsbuildinfo
