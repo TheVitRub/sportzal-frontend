@@ -35,7 +35,7 @@ export class WorkoutService {
   static createSet(workoutExerciseId: number, metricValues: Record<string, string | number>) {
     return api<WorkoutSet>(`/api/v1/workout-exercises/${workoutExerciseId}/sets`, {
       method: 'POST',
-      body: JSON.stringify({ clientId: crypto.randomUUID(), metricValues })
+      body: JSON.stringify({ clientId: createClientId(), metricValues })
     });
   }
 
@@ -67,3 +67,9 @@ export class WorkoutService {
   }
 }
 
+function createClientId() {
+  if (globalThis.crypto && 'randomUUID' in globalThis.crypto) {
+    return globalThis.crypto.randomUUID();
+  }
+  return `set_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+}
