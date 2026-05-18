@@ -17,7 +17,7 @@ export function AppShell({ children }: AppShellProps) {
         <div className="brand">
           <Dumbbell size={28} />
           <div>
-            <strong>Workout Tracker</strong>
+            <strong>Тренировки</strong>
             <span>{user?.name}</span>
           </div>
         </div>
@@ -42,4 +42,3 @@ export function AppShell({ children }: AppShellProps) {
     </div>
   );
 }
-

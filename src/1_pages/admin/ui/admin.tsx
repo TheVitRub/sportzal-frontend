@@ -142,7 +142,11 @@ export function AdminPage() {
             </label>
             <label>
               Тип схемы
-              <input value={schemaType} onChange={(event) => setSchemaType(event.target.value)} placeholder="strength, treadmill, duration" required />
+              <select value={schemaType} onChange={(event) => setSchemaType(event.target.value)} required>
+                <option value="strength">Силовое</option>
+                <option value="treadmill">Беговая дорожка</option>
+                <option value="duration">На время</option>
+              </select>
             </label>
           </div>
           <label>
@@ -177,7 +181,7 @@ export function AdminPage() {
 
             {fields.map((field, index) => (
               <div className="metricRow" key={`${field.key}-${index}`}>
-                <input value={field.key} onChange={(event) => updateField(fields, setFields, index, 'key', toKey(event.target.value))} placeholder="key" />
+                <input value={field.key} onChange={(event) => updateField(fields, setFields, index, 'key', toKey(event.target.value))} placeholder="код поля" />
                 <input value={field.label} onChange={(event) => updateField(fields, setFields, index, 'label', event.target.value)} placeholder="Название" />
                 <input value={field.unit} onChange={(event) => updateField(fields, setFields, index, 'unit', event.target.value)} placeholder="Ед." />
                 <select value={field.valueType} onChange={(event) => updateField(fields, setFields, index, 'valueType', event.target.value as MetricField['valueType'])}>

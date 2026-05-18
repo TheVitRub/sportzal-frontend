@@ -34,14 +34,14 @@ export function AuthCard() {
       <div className="authHeader">
         <Dumbbell size={34} />
         <div>
-          <h1>Workout Tracker</h1>
+          <h1>Тренировки</h1>
           <p>Первый зарегистрированный пользователь получает права администратора.</p>
         </div>
       </div>
       <form onSubmit={submit} className="formStack">
         <label>
-          E-mail
-          <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+          Почта
+          <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required placeholder="name@mail.ru" />
         </label>
         {mode === 'register' && (
           <label>
@@ -64,4 +64,3 @@ export function AuthCard() {
     </section>
   );
 }
-

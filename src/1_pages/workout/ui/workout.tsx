@@ -66,8 +66,8 @@ export function WorkoutPage() {
     <section className="page">
       <header className="pageHeader">
         <div>
-          <span className="eyebrow">Активная сессия</span>
-          <h1>{active ? active.title : 'Новая тренировка'}</h1>
+          <span className="eyebrow">Сегодня</span>
+          <h1>{active ? 'Тренировка идет' : 'Начать тренировку'}</h1>
         </div>
         {active && (
           <button className="primary" onClick={finishWorkout}>
@@ -81,15 +81,19 @@ export function WorkoutPage() {
       {!active ? (
         <div className="emptyState">
           <Dumbbell size={42} />
-          <h2>Тренировка еще не начата</h2>
-          <p>Создайте сессию, добавьте упражнение и фиксируйте подходы по одному.</p>
+          <h2>Один экран для всей тренировки</h2>
+          <p>Начните, выберите упражнение и добавляйте подходы или отрезки прямо с телефона.</p>
           <button className="primary" onClick={startWorkout} disabled={busy}>
             <Plus size={18} /> Начать тренировку
           </button>
         </div>
       ) : (
         <>
-          <div className="toolbar">
+          <div className="toolbar addExercisePanel">
+            <div>
+              <strong>Что делаем?</strong>
+              <span>Например: беговая дорожка, жим, планка</span>
+            </div>
             <select value={selectedExercise} onChange={(event) => setSelectedExercise(event.target.value)}>
               {exercises.map((exercise) => (
                 <option key={exercise.id} value={exercise.id}>
@@ -98,12 +102,12 @@ export function WorkoutPage() {
               ))}
             </select>
             <button className="primary" onClick={addExercise} disabled={busy || !selectedExercise}>
-              <Plus size={18} /> Добавить упражнение
+              <Plus size={18} /> Добавить
             </button>
           </div>
 
           <div className="exerciseList">
-            {active.exercises.length === 0 && <Notice text="Добавьте первое упражнение из каталога." />}
+            {active.exercises.length === 0 && <Notice text="Выберите упражнение выше и нажмите «Добавить»." />}
             {active.exercises.map((item) => (
               <WorkoutExerciseCard key={item.id} item={item} onReload={load} />
             ))}
@@ -115,4 +119,3 @@ export function WorkoutPage() {
 }
 
 export default WorkoutPage;
-

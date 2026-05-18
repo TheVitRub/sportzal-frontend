@@ -15,6 +15,17 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
   const schema = item.exerciseSnapshot.metricSchema;
   const media = item.exerciseSnapshot.media ?? [];
   const sets = item.sets ?? [];
+  const isTreadmill = schema.type === 'treadmill';
+  const entryName = isTreadmill ? 'отрезок' : 'подход';
+  const entryNameCapitalized = isTreadmill ? 'Отрезок' : 'Подход';
+  const totalMinutes = sets.reduce((sum, set) => sum + metricNumber(set.metricValues.duration_min), 0);
+  const estimatedDistance = sets.reduce((sum, set) => {
+    const distance = metricNumber(set.metricValues.distance_km);
+    if (distance > 0) {
+      return sum + distance;
+    }
+    return sum + (metricNumber(set.metricValues.duration_min) * metricNumber(set.metricValues.speed_kmh)) / 60;
+  }, 0);
 
   async function addSet() {
     await WorkoutService.createSet(item.id, defaultMetricValues(schema));
@@ -29,9 +40,17 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
           <h2>{item.exerciseSnapshot.title}</h2>
           {item.exerciseSnapshot.description && <p>{item.exerciseSnapshot.description}</p>}
         </div>
-        <button className="secondary" onClick={addSet}>
-          <Plus size={18} /> Подход
+        <button className="primary compactAction" onClick={addSet}>
+          <Plus size={18} /> {entryNameCapitalized}
         </button>
+      </div>
+
+      <div className="exerciseMeta">
+        <span>
+          {sets.length} {pluralize(sets.length, entryName, isTreadmill ? 'отрезка' : 'подхода', isTreadmill ? 'отрезков' : 'подходов')}
+        </span>
+        {isTreadmill && totalMinutes > 0 && <span>{formatNumber(totalMinutes)} мин</span>}
+        {isTreadmill && estimatedDistance > 0 && <span>примерно {formatNumber(estimatedDistance)} км</span>}
       </div>
 
       {media.length > 0 && (
@@ -47,7 +66,7 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
       )}
 
       <div className="setTable">
-        {sets.length === 0 && <Notice text="Подходов пока нет." />}
+        {sets.length === 0 && <Notice text={isTreadmill ? 'Добавьте первый отрезок. Он сразу появится как 3 мин на 5 км/ч.' : 'Добавьте первый подход.'} />}
         {sets.map((set) => (
           <SetRow key={set.id} set={set} schema={schema} onReload={onReload} />
         ))}
@@ -56,3 +75,23 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
   );
 }
 
+function metricNumber(value: unknown) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : 0;
+}
+
+function formatNumber(value: number) {
+  return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(value);
+}
+
+function pluralize(count: number, one: string, few: string, many: string) {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) {
+    return one;
+  }
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+    return few;
+  }
+  return many;
+}
