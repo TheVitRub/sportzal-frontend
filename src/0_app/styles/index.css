@@ -191,10 +191,11 @@ p {
 .pageHeader h1 {
   margin-top: 4px;
   font-family: var(--font-display);
-  font-size: clamp(36px, 7vw, 68px);
+  font-size: 56px;
   font-weight: 600;
   line-height: 1.08;
   letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
 .pageHeader p {
@@ -291,10 +292,11 @@ p {
 .emptyState h2 {
   max-width: 620px;
   font-family: var(--font-display);
-  font-size: clamp(30px, 7vw, 54px);
+  font-size: 48px;
   font-weight: 600;
   line-height: 1.02;
   letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
 .emptyState p {
@@ -387,14 +389,22 @@ p {
 
 .exerciseHead h2 {
   font-family: var(--font-display);
-  font-size: clamp(27px, 5vw, 38px);
+  font-size: 36px;
   font-weight: 600;
   line-height: 1.05;
   letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
 .compactAction {
   white-space: nowrap;
+}
+
+.exerciseActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .exerciseMeta {
@@ -815,7 +825,15 @@ p {
   }
 
   .pageHeader h1 {
-    font-size: clamp(34px, 11vw, 48px);
+    font-size: 30px;
+  }
+
+  .emptyState h2 {
+    font-size: 34px;
+  }
+
+  .exerciseHead h2 {
+    font-size: 30px;
   }
 
   .sidebar nav {
@@ -860,9 +878,14 @@ p {
     flex: 1;
   }
 
-  .exerciseHead .primary {
+  .exerciseHead .primary,
+  .exerciseHead .secondary {
     width: auto;
     align-self: flex-start;
+  }
+
+  .exerciseActions {
+    justify-content: flex-start;
   }
 
   .setFields {

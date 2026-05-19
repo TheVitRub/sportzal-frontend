@@ -1,4 +1,5 @@
-import { Plus } from 'lucide-react';
+import { useState } from 'react';
+import { CopyPlus, Plus } from 'lucide-react';
 import { API_BASE } from '@shared/api/api';
 import { defaultMetricValues } from '@shared/lib/metric';
 import { Notice } from '@shared/ui';
@@ -12,9 +13,12 @@ interface WorkoutExerciseCardProps {
 }
 
 export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps) {
+  const [busyAction, setBusyAction] = useState<'new' | 'repeat' | null>(null);
+  const [actionError, setActionError] = useState('');
   const schema = item.exerciseSnapshot.metricSchema;
   const media = item.exerciseSnapshot.media ?? [];
   const sets = item.sets ?? [];
+  const lastSet = sets[sets.length - 1];
   const isTreadmill = schema.type === 'treadmill';
   const entryName = isTreadmill ? 'отрезок' : 'подход';
   const totalMinutes = sets.reduce((sum, set) => sum + metricNumber(set.metricValues.duration_min), 0);
@@ -26,9 +30,28 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
     return sum + (metricNumber(set.metricValues.duration_min) * metricNumber(set.metricValues.speed_kmh)) / 60;
   }, 0);
 
+  async function createSet(metricValues: Record<string, string | number>, action: 'new' | 'repeat') {
+    setActionError('');
+    setBusyAction(action);
+    try {
+      await WorkoutService.createSet(item.id, metricValues);
+      await onReload();
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Не удалось добавить подход');
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
   async function addSet() {
-    await WorkoutService.createSet(item.id, defaultMetricValues(schema));
-    await onReload();
+    await createSet(defaultMetricValues(schema), 'new');
+  }
+
+  async function repeatLastSet() {
+    if (!lastSet) {
+      return;
+    }
+    await createSet(lastSet.metricValues, 'repeat');
   }
 
   return (
@@ -39,10 +62,19 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
           <h2>{item.exerciseSnapshot.title}</h2>
           {item.exerciseSnapshot.description && <p>{item.exerciseSnapshot.description}</p>}
         </div>
-        <button className="primary compactAction" onClick={addSet}>
-          <Plus size={18} /> Новый {entryName}
-        </button>
+        <div className="exerciseActions">
+          {lastSet && (
+            <button className="secondary compactAction" onClick={repeatLastSet} disabled={busyAction !== null}>
+              <CopyPlus size={18} /> {busyAction === 'repeat' ? 'Повторяем' : 'Повторить'}
+            </button>
+          )}
+          <button className="primary compactAction" onClick={addSet} disabled={busyAction !== null}>
+            <Plus size={18} /> {busyAction === 'new' ? 'Добавляем' : `Новый ${entryName}`}
+          </button>
+        </div>
       </div>
+
+      {actionError && <Notice tone="danger" text={actionError} />}
 
       <div className="exerciseMeta">
         <span>
