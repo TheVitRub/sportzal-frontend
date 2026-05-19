@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, Dumbbell, Plus } from 'lucide-react';
+import { CheckCircle2, Dumbbell, Plus, X } from 'lucide-react';
 import { CatalogService } from '@entities/catalog';
 import type { Exercise } from '@entities/catalog';
 import { WorkoutService } from '@entities/workout';
@@ -13,6 +13,7 @@ export function WorkoutPage() {
   const [selectedExercise, setSelectedExercise] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [confirmFinish, setConfirmFinish] = useState(false);
   const exerciseCount = active?.exercises.length ?? 0;
   const setCount = active?.exercises.reduce((sum, exercise) => sum + (exercise.sets?.length ?? 0), 0) ?? 0;
 
@@ -35,6 +36,7 @@ export function WorkoutPage() {
     try {
       const workout = await WorkoutService.create();
       setActive('workout' in workout ? workout.workout : workout);
+      setConfirmFinish(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось начать тренировку');
     } finally {
@@ -49,6 +51,7 @@ export function WorkoutPage() {
     setBusy(true);
     try {
       setActive(await WorkoutService.addExercise(active.id, Number(selectedExercise)));
+      setConfirmFinish(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось добавить упражнение');
     } finally {
@@ -60,8 +63,17 @@ export function WorkoutPage() {
     if (!active) {
       return;
     }
-    const updated = await WorkoutService.finish(active.id);
-    setActive(updated.status === 'active' ? updated : null);
+    setError('');
+    setBusy(true);
+    try {
+      const updated = await WorkoutService.finish(active.id);
+      setActive(updated.status === 'active' ? updated : null);
+      setConfirmFinish(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Не удалось завершить тренировку');
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -84,10 +96,23 @@ export function WorkoutPage() {
             </span>
           </div>
         )}
-        {active && (
-          <button className="primary" onClick={finishWorkout}>
+        {active && !confirmFinish && (
+          <button className="primary" onClick={() => setConfirmFinish(true)} disabled={busy}>
             <CheckCircle2 size={18} /> Завершить
           </button>
+        )}
+        {active && confirmFinish && (
+          <div className="finishConfirm" role="group" aria-label="Подтверждение завершения тренировки">
+            <span>Точно завершить тренировку?</span>
+            <div className="finishConfirmActions">
+              <button className="secondary" onClick={() => setConfirmFinish(false)} disabled={busy}>
+                <X size={18} /> Отмена
+              </button>
+              <button className="primary" onClick={finishWorkout} disabled={busy}>
+                <CheckCircle2 size={18} /> {busy ? 'Завершаем' : 'Завершить'}
+              </button>
+            </div>
+          </div>
         )}
       </header>
 

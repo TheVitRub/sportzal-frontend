@@ -381,6 +381,31 @@ p {
   line-height: 1;
 }
 
+.finishConfirm {
+  display: grid;
+  min-width: 280px;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  background: oklch(98% 0.004 95);
+}
+
+.finishConfirm span {
+  color: var(--fg);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.finishConfirmActions {
+  display: flex;
+  gap: 8px;
+}
+
+.finishConfirmActions button {
+  flex: 1;
+}
+
 .exerciseHead p {
   margin-top: 6px;
   color: var(--muted);
@@ -876,6 +901,11 @@ p {
 
   .workoutStats span {
     flex: 1;
+  }
+
+  .finishConfirm {
+    width: 100%;
+    min-width: 0;
   }
 
   .exerciseHead .primary,
