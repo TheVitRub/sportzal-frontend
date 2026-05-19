@@ -130,7 +130,7 @@ function fieldPlaceholder(key: string) {
     duration_min: '3',
     speed_kmh: '5',
     incline_percent: '0',
-    distance_km: 'если знаете',
+    distance_km: '0',
     duration_sec: '30',
     weight_kg: '0',
     reps: '8'

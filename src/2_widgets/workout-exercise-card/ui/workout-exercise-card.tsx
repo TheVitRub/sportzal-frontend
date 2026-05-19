@@ -17,7 +17,6 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
   const sets = item.sets ?? [];
   const isTreadmill = schema.type === 'treadmill';
   const entryName = isTreadmill ? 'отрезок' : 'подход';
-  const entryNameCapitalized = isTreadmill ? 'Отрезок' : 'Подход';
   const totalMinutes = sets.reduce((sum, set) => sum + metricNumber(set.metricValues.duration_min), 0);
   const estimatedDistance = sets.reduce((sum, set) => {
     const distance = metricNumber(set.metricValues.distance_km);
@@ -41,16 +40,17 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
           {item.exerciseSnapshot.description && <p>{item.exerciseSnapshot.description}</p>}
         </div>
         <button className="primary compactAction" onClick={addSet}>
-          <Plus size={18} /> {entryNameCapitalized}
+          <Plus size={18} /> Новый {entryName}
         </button>
       </div>
 
       <div className="exerciseMeta">
         <span>
-          {sets.length} {pluralize(sets.length, entryName, isTreadmill ? 'отрезка' : 'подхода', isTreadmill ? 'отрезков' : 'подходов')}
+          <strong>{sets.length}</strong>
+          {pluralize(sets.length, entryName, isTreadmill ? 'отрезка' : 'подхода', isTreadmill ? 'отрезков' : 'подходов')}
         </span>
-        {isTreadmill && totalMinutes > 0 && <span>{formatNumber(totalMinutes)} мин</span>}
-        {isTreadmill && estimatedDistance > 0 && <span>примерно {formatNumber(estimatedDistance)} км</span>}
+        {isTreadmill && totalMinutes > 0 && <span><strong>{formatNumber(totalMinutes)}</strong> мин</span>}
+        {isTreadmill && estimatedDistance > 0 && <span><strong>{formatNumber(estimatedDistance)}</strong> км</span>}
       </div>
 
       {media.length > 0 && (

@@ -13,6 +13,8 @@ export function WorkoutPage() {
   const [selectedExercise, setSelectedExercise] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const exerciseCount = active?.exercises.length ?? 0;
+  const setCount = active?.exercises.reduce((sum, exercise) => sum + (exercise.sets?.length ?? 0), 0) ?? 0;
 
   async function load() {
     const [workout, exerciseList] = await Promise.all([WorkoutService.active(), CatalogService.listExercises()]);
@@ -64,11 +66,24 @@ export function WorkoutPage() {
 
   return (
     <section className="page">
-      <header className="pageHeader">
+      <header className="pageHeader workoutHero">
         <div>
           <span className="eyebrow">Сегодня</span>
           <h1>{active ? 'Тренировка идет' : 'Начать тренировку'}</h1>
+          <p>{active ? 'Держите темп: добавляйте упражнения и подходы без лишних переходов.' : 'Откройте сессию и ведите всю тренировку с телефона.'}</p>
         </div>
+        {active && (
+          <div className="workoutStats" aria-label="Итоги тренировки">
+            <span>
+              <strong>{exerciseCount}</strong>
+              упражн.
+            </span>
+            <span>
+              <strong>{setCount}</strong>
+              подходов
+            </span>
+          </div>
+        )}
         {active && (
           <button className="primary" onClick={finishWorkout}>
             <CheckCircle2 size={18} /> Завершить
@@ -80,9 +95,10 @@ export function WorkoutPage() {
 
       {!active ? (
         <div className="emptyState">
-          <Dumbbell size={42} />
-          <h2>Один экран для всей тренировки</h2>
-          <p>Начните, выберите упражнение и добавляйте подходы или отрезки прямо с телефона.</p>
+          <span className="emptyIcon"><Dumbbell size={36} /></span>
+          <span className="eyebrow">Готовы к залу</span>
+          <h2>Один спокойный экран для всей тренировки</h2>
+          <p>Начните сессию, выберите упражнение и фиксируйте подходы крупными полями, удобно на ходу.</p>
           <button className="primary" onClick={startWorkout} disabled={busy}>
             <Plus size={18} /> Начать тренировку
           </button>
@@ -91,8 +107,9 @@ export function WorkoutPage() {
         <>
           <div className="toolbar addExercisePanel">
             <div>
-              <strong>Что делаем?</strong>
-              <span>Например: беговая дорожка, жим, планка</span>
+              <span className="eyebrow">Следующее действие</span>
+              <strong>Добавить упражнение</strong>
+              <span>Выберите из каталога и сразу внесите первый подход.</span>
             </div>
             <select value={selectedExercise} onChange={(event) => setSelectedExercise(event.target.value)}>
               {exercises.map((exercise) => (
