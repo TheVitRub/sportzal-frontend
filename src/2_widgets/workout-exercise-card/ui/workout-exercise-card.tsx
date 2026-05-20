@@ -5,6 +5,7 @@ import { defaultMetricValues } from '@shared/lib/metric';
 import { Notice } from '@shared/ui';
 import { WorkoutService } from '@entities/workout';
 import type { WorkoutExerciseDetail } from '@entities/workout';
+import { WorkoutTimekeeper } from '@widgets/workout-timekeeper';
 import { SetRow } from './set-row';
 
 interface WorkoutExerciseCardProps {
@@ -13,7 +14,7 @@ interface WorkoutExerciseCardProps {
 }
 
 export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps) {
-  const [busyAction, setBusyAction] = useState<'new' | 'repeat' | null>(null);
+  const [busyAction, setBusyAction] = useState<'new' | 'repeat' | 'timed' | null>(null);
   const [actionError, setActionError] = useState('');
   const schema = item.exerciseSnapshot.metricSchema;
   const media = item.exerciseSnapshot.media ?? [];
@@ -21,6 +22,8 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
   const lastSet = sets[sets.length - 1];
   const isTreadmill = schema.type === 'treadmill';
   const entryName = isTreadmill ? 'отрезок' : 'подход';
+  const durationField = schema.fields.find((field) => field.key === 'duration_sec' || field.key === 'duration_min');
+  const durationTimerDefault = durationField ? secondsFromMetric(defaultMetricValues(schema)[durationField.key], durationField.key) : 30;
   const totalMinutes = sets.reduce((sum, set) => sum + metricNumber(set.metricValues.duration_min), 0);
   const estimatedDistance = sets.reduce((sum, set) => {
     const distance = metricNumber(set.metricValues.distance_km);
@@ -30,28 +33,42 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
     return sum + (metricNumber(set.metricValues.duration_min) * metricNumber(set.metricValues.speed_kmh)) / 60;
   }, 0);
 
-  async function createSet(metricValues: Record<string, string | number>, action: 'new' | 'repeat') {
+  async function createSet(metricValues: Record<string, string | number>, action: 'new' | 'repeat' | 'timed') {
     setActionError('');
     setBusyAction(action);
     try {
       await WorkoutService.createSet(item.id, metricValues);
       await onReload();
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : 'Не удалось добавить подход');
+      const message = err instanceof Error ? err.message : 'Не удалось добавить подход';
+      setActionError(message);
+      throw new Error(message);
     } finally {
       setBusyAction(null);
     }
   }
 
   async function addSet() {
-    await createSet(defaultMetricValues(schema), 'new');
+    await createSet(defaultMetricValues(schema), 'new').catch(() => undefined);
   }
 
   async function repeatLastSet() {
     if (!lastSet) {
       return;
     }
-    await createSet(lastSet.metricValues, 'repeat');
+    await createSet(lastSet.metricValues, 'repeat').catch(() => undefined);
+  }
+
+  async function saveTimedSet(seconds: number) {
+    if (!durationField) {
+      return;
+    }
+
+    const metricValues = {
+      ...defaultMetricValues(schema),
+      [durationField.key]: durationMetricValue(seconds, durationField.key)
+    };
+    await createSet(metricValues, 'timed');
   }
 
   return (
@@ -75,6 +92,18 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
       </div>
 
       {actionError && <Notice tone="danger" text={actionError} />}
+
+      {durationField && (
+        <WorkoutTimekeeper
+          variant="exercise"
+          title="Время подхода"
+          description="Засеките планку, удержание или другой подход на время и сразу запишите результат."
+          defaultTimerSeconds={durationTimerDefault}
+          timerPresets={[15, 30, 45, 60, 90, 120]}
+          saveLabel={`Записать ${entryName}`}
+          onSaveDuration={saveTimedSet}
+        />
+      )}
 
       <div className="exerciseMeta">
         <span>
@@ -114,6 +143,21 @@ function metricNumber(value: unknown) {
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(value);
+}
+
+function secondsFromMetric(value: unknown, key: string) {
+  const number = Number(value);
+  if (!Number.isFinite(number) || number <= 0) {
+    return 30;
+  }
+  return key === 'duration_min' ? Math.max(1, Math.round(number * 60)) : Math.max(1, Math.round(number));
+}
+
+function durationMetricValue(seconds: number, key: string) {
+  if (key === 'duration_min') {
+    return Number((seconds / 60).toFixed(2));
+  }
+  return Math.max(1, Math.round(seconds));
 }
 
 function pluralize(count: number, one: string, few: string, many: string) {

@@ -5,6 +5,7 @@ import type { Exercise } from '@entities/catalog';
 import { WorkoutService } from '@entities/workout';
 import type { WorkoutDetail } from '@entities/workout';
 import { WorkoutExerciseCard } from '@widgets/workout-exercise-card';
+import { WorkoutTimekeeper } from '@widgets/workout-timekeeper';
 import { Notice } from '@shared/ui';
 
 export function WorkoutPage() {
@@ -130,6 +131,15 @@ export function WorkoutPage() {
         </div>
       ) : (
         <>
+          <WorkoutTimekeeper
+            variant="rest"
+            title="Отдых между подходами"
+            description="Запускайте обратный отсчет после подхода. По окончании прозвучит короткий сигнал."
+            defaultTimerSeconds={90}
+            timerPresets={[30, 60, 90, 120, 180]}
+            showStopwatch={false}
+          />
+
           <div className="toolbar addExercisePanel">
             <div>
               <span className="eyebrow">Следующее действие</span>
