@@ -15,6 +15,65 @@ const defaultField: MetricField = {
   min: 1
 };
 
+const schemaPresets: Record<string, MetricField[]> = {
+  strength: [
+    {
+      key: 'weight_kg',
+      label: 'Вес',
+      unit: 'кг',
+      valueType: 'float',
+      required: true,
+      min: 0,
+      step: 0.5
+    },
+    defaultField
+  ],
+  treadmill: [
+    {
+      key: 'duration_min',
+      label: 'Минуты',
+      unit: 'мин',
+      valueType: 'float',
+      required: true,
+      min: 0.5,
+      step: 0.5
+    },
+    {
+      key: 'speed_kmh',
+      label: 'Скорость',
+      unit: 'км/ч',
+      valueType: 'float',
+      required: true,
+      min: 0,
+      step: 0.1
+    },
+    {
+      key: 'incline_percent',
+      label: 'Наклон',
+      unit: '%',
+      valueType: 'float',
+      required: false,
+      min: 0,
+      step: 0.5
+    }
+  ],
+  duration: [
+    {
+      key: 'duration_sec',
+      label: 'Секунды',
+      unit: 'сек',
+      valueType: 'int',
+      required: true,
+      min: 1,
+      step: 1
+    }
+  ]
+};
+
+function presetFields(type: string) {
+  return (schemaPresets[type] ?? [defaultField]).map((field) => ({ ...field }));
+}
+
 export function AdminPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -24,7 +83,7 @@ export function AdminPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [schemaType, setSchemaType] = useState('strength');
-  const [fields, setFields] = useState<MetricField[]>([defaultField]);
+  const [fields, setFields] = useState<MetricField[]>(presetFields('strength'));
   const [error, setError] = useState('');
 
   async function load() {
@@ -78,7 +137,7 @@ export function AdminPage() {
       });
       setTitle('');
       setDescription('');
-      setFields([defaultField]);
+      setFields(presetFields(schemaType));
       await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось создать упражнение');
@@ -99,8 +158,8 @@ export function AdminPage() {
     <section className="page">
       <header className="pageHeader">
         <div>
-          <span className="eyebrow">Справочник</span>
-          <h1>Администрирование упражнений</h1>
+          <h1>Каталог</h1>
+          <p>Создавайте категории и упражнения без ручной настройки типовых полей.</p>
         </div>
       </header>
 
@@ -115,10 +174,10 @@ export function AdminPage() {
           </label>
           <label>
             Описание
-            <textarea value={categoryDescription} onChange={(event) => setCategoryDescription(event.target.value)} />
+            <input value={categoryDescription} onChange={(event) => setCategoryDescription(event.target.value)} placeholder="Необязательно" />
           </label>
           <button className="primary">
-            <Plus size={17} /> Создать категорию
+            <Plus size={17} /> Добавить
           </button>
           <div className="chips">
             {categories.map((category) => (
@@ -141,8 +200,15 @@ export function AdminPage() {
               </select>
             </label>
             <label>
-              Тип схемы
-              <select value={schemaType} onChange={(event) => setSchemaType(event.target.value)} required>
+              Тип
+              <select
+                value={schemaType}
+                onChange={(event) => {
+                  setSchemaType(event.target.value);
+                  setFields(presetFields(event.target.value));
+                }}
+                required
+              >
                 <option value="strength">Силовое</option>
                 <option value="treadmill">Беговая дорожка</option>
                 <option value="duration">На время</option>
@@ -155,12 +221,12 @@ export function AdminPage() {
           </label>
           <label>
             Описание
-            <textarea value={description} onChange={(event) => setDescription(event.target.value)} />
+            <input value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Необязательно" />
           </label>
 
           <div className="metricBuilder">
             <div className="sectionTitle">
-              <h3>Метрики подхода</h3>
+              <h3>Поля подхода</h3>
               <button
                 type="button"
                 className="secondary"
@@ -175,7 +241,7 @@ export function AdminPage() {
                   ])
                 }
               >
-                <Plus size={16} /> Поле
+                <Plus size={16} /> Добавить поле
               </button>
             </div>
 
@@ -202,7 +268,7 @@ export function AdminPage() {
           </div>
 
           <button className="primary" disabled={!categoryID || fields.length === 0}>
-            <Save size={17} /> Создать упражнение
+            <Save size={17} /> Сохранить упражнение
           </button>
         </form>
       </div>

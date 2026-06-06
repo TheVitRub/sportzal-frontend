@@ -105,8 +105,8 @@ export function SetRow({ set, schema, onReload }: SetRowProps) {
         />
       </label>
 
-      <button className="deleteSetButton danger" title={`Удалить ${entryName.toLowerCase()}`} onClick={deleteSet}>
-        <Trash2 size={17} /> Удалить
+      <button className="deleteSetButton iconOnly danger" title={`Удалить ${entryName.toLowerCase()}`} aria-label={`Удалить ${entryName.toLowerCase()}`} onClick={deleteSet}>
+        <Trash2 size={17} />
       </button>
     </div>
   );

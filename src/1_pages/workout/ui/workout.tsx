@@ -6,6 +6,7 @@ import { WorkoutService } from '@entities/workout';
 import type { WorkoutDetail } from '@entities/workout';
 import { WorkoutExerciseCard } from '@widgets/workout-exercise-card';
 import { WorkoutTimekeeper } from '@widgets/workout-timekeeper';
+import { defaultMetricValues } from '@shared/lib/metric';
 import { Notice } from '@shared/ui';
 
 export function WorkoutPage() {
@@ -49,9 +50,18 @@ export function WorkoutPage() {
     if (!active || !selectedExercise) {
       return;
     }
+    const existingExerciseIds = new Set(active.exercises.map((exercise) => exercise.id));
     setBusy(true);
     try {
-      setActive(await WorkoutService.addExercise(active.id, Number(selectedExercise)));
+      const updated = await WorkoutService.addExercise(active.id, Number(selectedExercise));
+      const addedExercise = updated.exercises.find((exercise) => !existingExerciseIds.has(exercise.id)) ?? updated.exercises.at(-1);
+
+      if (addedExercise) {
+        await WorkoutService.createSet(addedExercise.id, defaultMetricValues(addedExercise.exerciseSnapshot.metricSchema));
+        setActive(await WorkoutService.active());
+      } else {
+        setActive(updated);
+      }
       setConfirmFinish(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось добавить упражнение');
@@ -78,12 +88,11 @@ export function WorkoutPage() {
   }
 
   return (
-    <section className="page">
+    <section className="page workoutPage">
       <header className="pageHeader workoutHero">
         <div>
-          <span className="eyebrow">Сегодня</span>
-          <h1>{active ? 'Тренировка идет' : 'Начать тренировку'}</h1>
-          <p>{active ? 'Держите темп: добавляйте упражнения и подходы без лишних переходов.' : 'Откройте сессию и ведите всю тренировку с телефона.'}</p>
+          <h1>Тренировка</h1>
+          <p>{active ? 'Добавляйте упражнение: первый подход появится сразу.' : 'Один экран для записи подходов.'}</p>
         </div>
         {active && (
           <div className="workoutStats" aria-label="Итоги тренировки">
@@ -121,30 +130,19 @@ export function WorkoutPage() {
 
       {!active ? (
         <div className="emptyState">
-          <span className="emptyIcon"><Dumbbell size={36} /></span>
-          <span className="eyebrow">Готовы к залу</span>
-          <h2>Один спокойный экран для всей тренировки</h2>
-          <p>Начните сессию, выберите упражнение и фиксируйте подходы крупными полями, удобно на ходу.</p>
+          <span className="emptyIcon"><Dumbbell size={28} /></span>
+          <h2>Начните и сразу записывайте данные</h2>
+          <p>После добавления упражнения первый подход создается автоматически.</p>
           <button className="primary" onClick={startWorkout} disabled={busy}>
             <Plus size={18} /> Начать тренировку
           </button>
         </div>
       ) : (
         <>
-          <WorkoutTimekeeper
-            variant="rest"
-            title="Отдых между подходами"
-            description="Запускайте обратный отсчет после подхода. По окончании прозвучит короткий сигнал."
-            defaultTimerSeconds={90}
-            timerPresets={[30, 60, 90, 120, 180]}
-            showStopwatch={false}
-          />
-
-          <div className="toolbar addExercisePanel">
+          <div className="toolbar addExercisePanel" aria-label="Быстрое добавление упражнения">
             <div>
-              <span className="eyebrow">Следующее действие</span>
-              <strong>Добавить упражнение</strong>
-              <span>Выберите из каталога и сразу внесите первый подход.</span>
+              <strong>Новое упражнение</strong>
+              <span>Первый подход создастся сам.</span>
             </div>
             <select value={selectedExercise} onChange={(event) => setSelectedExercise(event.target.value)}>
               {exercises.map((exercise) => (
@@ -159,11 +157,19 @@ export function WorkoutPage() {
           </div>
 
           <div className="exerciseList">
-            {active.exercises.length === 0 && <Notice text="Выберите упражнение выше и нажмите «Добавить»." />}
+            {active.exercises.length === 0 && <Notice text="Выберите упражнение и нажмите «Добавить»." />}
             {active.exercises.map((item) => (
               <WorkoutExerciseCard key={item.id} item={item} onReload={load} />
             ))}
           </div>
+
+          <WorkoutTimekeeper
+            variant="rest"
+            title="Отдых"
+            defaultTimerSeconds={90}
+            timerPresets={[30, 60, 90, 120, 180]}
+            showStopwatch={false}
+          />
         </>
       )}
     </section>

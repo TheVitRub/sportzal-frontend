@@ -86,24 +86,12 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
             </button>
           )}
           <button className="primary compactAction" onClick={addSet} disabled={busyAction !== null}>
-            <Plus size={18} /> {busyAction === 'new' ? 'Добавляем' : `Новый ${entryName}`}
+            <Plus size={18} /> {busyAction === 'new' ? 'Добавляем' : `Новый ${entryName.toLowerCase()}`}
           </button>
         </div>
       </div>
 
       {actionError && <Notice tone="danger" text={actionError} />}
-
-      {durationField && (
-        <WorkoutTimekeeper
-          variant="exercise"
-          title="Время подхода"
-          description="Засеките планку, удержание или другой подход на время и сразу запишите результат."
-          defaultTimerSeconds={durationTimerDefault}
-          timerPresets={[15, 30, 45, 60, 90, 120]}
-          saveLabel={`Записать ${entryName}`}
-          onSaveDuration={saveTimedSet}
-        />
-      )}
 
       <div className="exerciseMeta">
         <span>
@@ -127,11 +115,22 @@ export function WorkoutExerciseCard({ item, onReload }: WorkoutExerciseCardProps
       )}
 
       <div className="setTable">
-        {sets.length === 0 && <Notice text={isTreadmill ? 'Добавьте первый отрезок. Он сразу появится как 3 мин на 5 км/ч.' : 'Добавьте первый подход.'} />}
+        {sets.length === 0 && <Notice text={`Нажмите «Новый ${entryName.toLowerCase()}».`} />}
         {sets.map((set) => (
           <SetRow key={set.id} set={set} schema={schema} onReload={onReload} />
         ))}
       </div>
+
+      {durationField && (
+        <WorkoutTimekeeper
+          variant="exercise"
+          title="Время"
+          defaultTimerSeconds={durationTimerDefault}
+          timerPresets={[15, 30, 45, 60, 90, 120]}
+          saveLabel={`Записать ${entryName}`}
+          onSaveDuration={saveTimedSet}
+        />
+      )}
     </article>
   );
 }

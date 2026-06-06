@@ -1,20 +1,21 @@
 :root {
-  --bg: oklch(98% 0.004 95);
-  --surface: oklch(100% 0.002 95);
-  --fg: oklch(20% 0.018 70);
-  --muted: oklch(48% 0.012 70);
-  --border: oklch(90% 0.006 95);
-  --accent: oklch(52% 0.10 28);
-  --accent-soft: oklch(94% 0.028 32);
-  --ink-soft: oklch(29% 0.018 70);
-  --success: oklch(47% 0.095 148);
-  --danger: oklch(48% 0.14 28);
-  --font-display: 'Iowan Old Style', 'Charter', Georgia, serif;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #f7f7f7;
+  --fg: #181818;
+  --muted: #6d6d6d;
+  --border: #e5e5e5;
+  --accent: #181818;
+  --accent-hover: #2f2f2f;
+  --accent-soft: #f0f0f0;
+  --danger: #b42318;
+  --danger-soft: #fff1f0;
+  --success: #1f7a4d;
+  --success-soft: #eef8f2;
   --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   color: var(--fg);
   background: var(--bg);
-  font-family:
-    var(--font-body);
+  font-family: var(--font-body);
 }
 
 * {
@@ -25,7 +26,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(180deg, var(--bg), oklch(96% 0.005 95));
+  background: var(--bg);
 }
 
 button,
@@ -42,18 +43,19 @@ button {
 
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.65;
+  opacity: 0.58;
 }
 
 input,
 select,
 textarea {
   width: 100%;
+  min-height: 44px;
   border: 1px solid var(--border);
   border-radius: 6px;
   background: var(--surface);
   color: var(--fg);
-  padding: 14px 14px;
+  padding: 10px 12px;
   outline: none;
 }
 
@@ -61,7 +63,7 @@ input:focus,
 select:focus,
 textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px oklch(52% 0.10 28 / 0.12);
+  box-shadow: 0 0 0 3px rgb(24 24 24 / 0.08);
 }
 
 textarea {
@@ -71,9 +73,10 @@ textarea {
 
 label {
   display: grid;
-  gap: 8px;
+  min-width: 0;
+  gap: 7px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 650;
 }
 
@@ -86,7 +89,7 @@ p {
 
 .appShell {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: 220px minmax(0, 1fr);
   min-height: 100vh;
 }
 
@@ -95,47 +98,44 @@ p {
   top: 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
   height: 100vh;
-  padding: 24px;
+  padding: 18px 14px;
   border-right: 1px solid var(--border);
-  background: oklch(22% 0.018 70);
-  color: var(--surface);
+  background: var(--surface);
+  color: var(--fg);
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  min-height: 42px;
+  padding: 0 6px;
 }
 
 .brand div {
   display: grid;
-  gap: 3px;
+  gap: 2px;
 }
 
 .brand span,
 .eyebrow,
 .muted {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .eyebrow {
-  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 750;
   letter-spacing: 0;
   text-transform: uppercase;
 }
 
-.sidebar .brand span {
-  color: oklch(82% 0.012 95);
-}
-
 .sidebar nav {
   display: grid;
-  gap: 8px;
+  gap: 4px;
 }
 
 .sidebar nav button,
@@ -143,14 +143,16 @@ p {
 .ghost {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-height: 42px;
-  border-radius: 4px;
-  padding: 10px 12px;
+  gap: 9px;
+  min-height: 40px;
+  border-radius: 6px;
+  padding: 9px 10px;
   background: transparent;
-  color: var(--surface);
+  color: var(--fg);
   text-align: left;
   text-decoration: none;
+  font-size: 14px;
+  font-weight: 650;
 }
 
 .sidebar nav button.active,
@@ -158,7 +160,7 @@ p {
 .sidebar nav button:hover,
 .sidebar nav a:hover,
 .ghost:hover {
-  background: oklch(31% 0.024 70);
+  background: var(--accent-soft);
 }
 
 .ghost {
@@ -167,43 +169,47 @@ p {
 
 .content {
   min-width: 0;
-  padding: 24px;
+  padding: 22px;
 }
 
 .page {
   display: grid;
-  gap: 16px;
-  max-width: 980px;
+  min-width: 0;
+  gap: 12px;
+  max-width: 1080px;
   margin: 0 auto;
+}
+
+.workoutPage {
+  max-width: 1040px;
 }
 
 .pageHeader,
 .detailHeader,
 .exerciseHead,
 .sectionTitle,
-.toolbar {
+.toolbar,
+.timekeeperTop {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
 }
 
 .pageHeader h1 {
-  margin-top: 4px;
-  font-family: var(--font-display);
-  font-size: 56px;
-  font-weight: 600;
+  font-size: 34px;
+  font-weight: 760;
   line-height: 1.08;
   letter-spacing: 0;
   overflow-wrap: anywhere;
 }
 
 .pageHeader p {
-  max-width: 560px;
-  margin-top: 10px;
+  max-width: 520px;
+  margin-top: 6px;
   color: var(--muted);
-  font-size: 16px;
-  line-height: 1.55;
+  font-size: 15px;
+  line-height: 1.45;
 }
 
 .primary,
@@ -215,10 +221,12 @@ p {
   justify-content: center;
   gap: 8px;
   min-height: 40px;
-  border-radius: 5px;
-  padding: 12px 16px;
+  border-radius: 6px;
+  padding: 10px 14px;
   text-decoration: none;
-  font-weight: 750;
+  font-size: 14px;
+  font-weight: 760;
+  white-space: nowrap;
 }
 
 .primary {
@@ -226,10 +234,20 @@ p {
   color: var(--surface);
 }
 
+.primary:hover {
+  background: var(--accent-hover);
+}
+
 .secondary {
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--fg);
+}
+
+.secondary:hover,
+.iconButton:hover,
+.uploadButton:hover {
+  background: var(--surface-muted);
 }
 
 .danger {
@@ -246,13 +264,17 @@ p {
 .notice {
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 12px 14px;
+  padding: 11px 12px;
   background: var(--surface);
   color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .notice.danger,
 .errorText {
+  border-color: rgb(180 35 24 / 0.2);
+  background: var(--danger-soft);
   color: var(--danger);
 }
 
@@ -261,7 +283,8 @@ p {
 .authPanel,
 .workoutExercise,
 .detailPanel,
-.listPanel {
+.listPanel,
+.timekeeperPanel {
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface);
@@ -271,52 +294,48 @@ p {
 .emptyState {
   display: grid;
   justify-items: start;
-  gap: 14px;
-  padding: clamp(24px, 6vw, 44px);
-  background:
-    linear-gradient(135deg, var(--surface), oklch(97% 0.006 95)),
-    var(--surface);
+  gap: 12px;
+  padding: clamp(22px, 5vw, 36px);
 }
 
 .emptyIcon {
   display: inline-grid;
   place-items: center;
-  width: 66px;
-  height: 66px;
+  width: 48px;
+  height: 48px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  color: var(--accent);
-  background: var(--accent-soft);
+  color: var(--fg);
+  background: var(--surface-muted);
 }
 
 .emptyState h2 {
-  max-width: 620px;
-  font-family: var(--font-display);
-  font-size: 48px;
-  font-weight: 600;
-  line-height: 1.02;
+  max-width: 560px;
+  font-size: 30px;
+  font-weight: 760;
+  line-height: 1.12;
   letter-spacing: 0;
   overflow-wrap: anywhere;
 }
 
 .emptyState p {
-  max-width: 560px;
+  max-width: 520px;
   color: var(--muted);
-  font-size: 17px;
-  line-height: 1.55;
+  font-size: 15px;
+  line-height: 1.45;
 }
 
 .toolbar {
-  align-items: stretch;
-  padding: 16px;
+  align-items: center;
+  padding: 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: oklch(97% 0.006 95);
+  background: var(--surface);
 }
 
 .addExercisePanel {
   display: grid;
-  grid-template-columns: minmax(210px, 0.8fr) minmax(0, 1.2fr) auto;
+  grid-template-columns: minmax(160px, 0.72fr) minmax(220px, 1fr) auto;
 }
 
 .addExercisePanel div {
@@ -327,7 +346,7 @@ p {
 
 .addExercisePanel span {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .exerciseList,
@@ -335,66 +354,61 @@ p {
 .catalogList,
 .readonlyWorkout {
   display: grid;
-  gap: 14px;
+  min-width: 0;
+  gap: 12px;
 }
 
 .workoutExercise,
 .panel {
-  padding: clamp(16px, 3vw, 22px);
+  padding: clamp(14px, 2.4vw, 20px);
 }
 
 .workoutHero {
-  position: relative;
-  overflow: hidden;
-  align-items: flex-start;
-  padding: clamp(22px, 5vw, 34px);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
+  align-items: center;
+  padding: 14px 0 2px;
 }
 
 .workoutStats {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-left: auto;
 }
 
 .workoutStats span {
   display: grid;
-  min-width: 92px;
-  gap: 2px;
+  min-width: 78px;
+  gap: 1px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 10px 12px;
-  background: oklch(98% 0.004 95);
+  padding: 8px 10px;
+  background: var(--surface);
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 750;
+  font-size: 11px;
+  font-weight: 720;
   text-transform: uppercase;
   letter-spacing: 0;
 }
 
 .workoutStats strong {
   color: var(--fg);
-  font-family: var(--font-display);
-  font-size: 26px;
+  font-size: 22px;
   line-height: 1;
 }
 
 .finishConfirm {
   display: grid;
-  min-width: 280px;
-  gap: 10px;
+  min-width: 260px;
+  gap: 9px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 12px;
-  background: oklch(98% 0.004 95);
+  padding: 10px;
+  background: var(--surface);
 }
 
 .finishConfirm span {
   color: var(--fg);
-  font-size: 14px;
-  font-weight: 750;
+  font-size: 13px;
+  font-weight: 720;
 }
 
 .finishConfirmActions {
@@ -408,58 +422,51 @@ p {
 
 .timekeeperPanel {
   display: grid;
-  gap: 14px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
+  gap: 12px;
+  padding: 14px;
 }
 
-.timekeeperTop {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
+.restTimekeeper {
+  margin-top: 2px;
 }
 
 .timekeeperTop h2 {
-  margin-top: 3px;
-  font-family: var(--font-display);
-  font-size: 30px;
-  font-weight: 600;
-  line-height: 1.05;
+  margin-top: 2px;
+  font-size: 22px;
+  font-weight: 740;
+  line-height: 1.12;
   letter-spacing: 0;
 }
 
 .timekeeperDescription {
-  max-width: 620px;
-  margin-top: 6px;
+  max-width: 560px;
+  margin-top: 4px;
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .exerciseTimekeeper {
-  gap: 12px;
-  margin-top: 16px;
-  padding: 16px 0 0;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 14px 0 0;
   border-width: 1px 0 0;
   border-radius: 0;
   background: transparent;
 }
 
 .exerciseTimekeeper .timekeeperTop h2 {
-  font-size: 25px;
+  font-size: 20px;
 }
 
 .timeModeSwitch {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
-  padding: 4px;
+  gap: 4px;
+  padding: 3px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: oklch(98% 0.004 95);
+  background: var(--surface-muted);
 }
 
 .timeModeSwitch button,
@@ -468,11 +475,12 @@ p {
   align-items: center;
   justify-content: center;
   gap: 7px;
-  min-height: 38px;
+  min-height: 36px;
   border-radius: 5px;
   background: transparent;
   color: var(--muted);
-  font-weight: 750;
+  font-size: 13px;
+  font-weight: 740;
 }
 
 .timeModeSwitch button.active,
@@ -484,54 +492,54 @@ p {
 
 .timeModePanel {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .timeDisplay {
   display: grid;
   gap: 10px;
-  min-height: 96px;
+  min-height: 84px;
   align-content: center;
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 16px;
-  background: oklch(99% 0.002 95);
+  padding: 14px;
+  background: var(--surface-muted);
 }
 
 .timeDisplay > span {
   font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
-  font-size: clamp(42px, 8vw, 72px);
-  font-weight: 850;
+  font-size: clamp(36px, 7vw, 60px);
+  font-weight: 820;
   line-height: 1;
   letter-spacing: 0;
 }
 
 .timeDisplay.done {
-  border-color: oklch(76% 0.08 148);
-  background: oklch(97% 0.018 148);
+  border-color: rgb(31 122 77 / 0.28);
+  background: var(--success-soft);
 }
 
 .stopwatchDisplay {
-  min-height: 164px;
-}
-
-.exerciseTimekeeper .timeDisplay {
-  min-height: 104px;
-}
-
-.exerciseTimekeeper .stopwatchDisplay {
   min-height: 132px;
 }
 
+.exerciseTimekeeper .timeDisplay {
+  min-height: 92px;
+}
+
+.exerciseTimekeeper .stopwatchDisplay {
+  min-height: 116px;
+}
+
 .exerciseTimekeeper .timeDisplay > span {
-  font-size: clamp(36px, 7vw, 56px);
+  font-size: clamp(32px, 7vw, 52px);
 }
 
 .timerProgress {
   overflow: hidden;
-  height: 8px;
+  height: 6px;
   border-radius: 999px;
-  background: oklch(92% 0.006 95);
+  background: #dddddd;
 }
 
 .timerProgress span {
@@ -545,19 +553,23 @@ p {
 .timerInputs {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
 .timerInputs input {
-  min-height: 50px;
-  font-size: 20px;
-  font-weight: 800;
+  min-height: 46px;
+  font-size: 18px;
+  font-weight: 760;
 }
 
 .timerPresets {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.exerciseTimekeeper .timerPresets {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 .timerPresets button {
@@ -577,7 +589,7 @@ p {
 
 .durationSave span {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -585,17 +597,21 @@ p {
   width: 100%;
 }
 
+.exerciseHead {
+  align-items: flex-start;
+}
+
 .exerciseHead p {
-  margin-top: 6px;
+  margin-top: 4px;
   color: var(--muted);
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .exerciseHead h2 {
-  font-family: var(--font-display);
-  font-size: 36px;
-  font-weight: 600;
-  line-height: 1.05;
+  font-size: 24px;
+  font-weight: 760;
+  line-height: 1.12;
   letter-spacing: 0;
   overflow-wrap: anywhere;
 }
@@ -614,8 +630,8 @@ p {
 .exerciseMeta {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .exerciseMeta span {
@@ -624,32 +640,31 @@ p {
   gap: 6px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  padding: 8px 11px;
-  background: oklch(98% 0.004 95);
+  padding: 6px 9px;
+  background: var(--surface);
   color: var(--muted);
   font-size: 12px;
   font-weight: 700;
 }
 
 .exerciseMeta strong {
-  color: var(--accent);
-  font-family: var(--font-display);
-  font-size: 19px;
+  color: var(--fg);
+  font-size: 16px;
   line-height: 1;
 }
 
 .mediaStrip {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   overflow-x: auto;
-  margin-top: 14px;
+  margin-top: 12px;
   padding-bottom: 4px;
 }
 
 .mediaStrip img,
 .mediaStrip video {
-  width: 180px;
-  height: 110px;
+  width: 168px;
+  height: 104px;
   object-fit: cover;
   border-radius: 6px;
   border: 1px solid var(--border);
@@ -658,20 +673,20 @@ p {
 .setTable {
   display: grid;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .setRow {
   display: grid;
-  gap: 12px;
-  padding: 14px;
+  gap: 11px;
+  padding: 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: oklch(99% 0.002 95);
+  background: var(--surface-muted);
 }
 
 .setRowTreadmill {
-  background: oklch(98% 0.006 110);
+  background: #f8faf8;
 }
 
 .setTop {
@@ -682,15 +697,18 @@ p {
 }
 
 .setTop strong {
-  font-size: 17px;
-  font-family: var(--font-display);
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 760;
 }
 
 .setFields {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 9px;
+}
+
+.wideField {
+  grid-column: 1 / -1;
 }
 
 .inputWithUnit {
@@ -717,6 +735,7 @@ p {
   padding-right: 10px;
   color: var(--muted);
   white-space: nowrap;
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -725,7 +744,7 @@ p {
   align-items: center;
   justify-content: flex-end;
   gap: 5px;
-  min-height: 24px;
+  min-height: 22px;
   color: var(--muted);
   font-size: 12px;
   font-weight: 700;
@@ -740,18 +759,28 @@ p {
 }
 
 .noteField {
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .deleteSetButton {
   justify-self: start;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 7px;
   min-height: 36px;
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 8px 10px;
   background: transparent;
+}
+
+.deleteSetButton:hover {
+  background: rgb(180 35 24 / 0.07);
+}
+
+.iconOnly {
+  width: 38px;
+  padding: 0;
 }
 
 .authLayout {
@@ -764,52 +793,67 @@ p {
 
 .authPanel {
   display: grid;
-  gap: 20px;
-  width: min(460px, 100%);
-  padding: 28px;
+  min-width: 0;
+  gap: 18px;
+  width: calc(100vw - 48px);
+  max-width: 420px;
+  padding: 24px;
+}
+
+.authPanel > *,
+.formStack > * {
+  min-width: 0;
 }
 
 .authHeader {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   align-items: flex-start;
 }
 
+.authHeader h1 {
+  font-size: 28px;
+  line-height: 1.1;
+}
+
 .authHeader p {
-  margin-top: 6px;
+  margin-top: 5px;
   color: var(--muted);
+  font-size: 14px;
+  line-height: 1.42;
 }
 
 .linkButton {
-  background: transparent;
-  color: var(--accent);
   justify-self: start;
+  background: transparent;
+  color: var(--fg);
+  font-weight: 720;
 }
 
 .historyGrid,
 .adminGrid {
   display: grid;
-  grid-template-columns: 340px minmax(0, 1fr);
-  gap: 18px;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 12px;
 }
 
 .listPanel,
 .detailPanel {
-  padding: 14px;
+  padding: 12px;
 }
 
 .listPanel {
   display: grid;
   align-content: start;
-  gap: 8px;
+  gap: 6px;
 }
 
 .listItem {
   display: grid;
-  gap: 4px;
+  gap: 3px;
   width: 100%;
   border-radius: 6px;
-  padding: 12px;
+  padding: 10px;
   background: transparent;
   color: var(--fg);
   text-align: left;
@@ -825,7 +869,7 @@ p {
 .catalogItem p,
 .readonlyExercise p {
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .actions {
@@ -840,8 +884,8 @@ p {
 
 .readonlyExercise {
   display: grid;
-  gap: 10px;
-  padding: 14px 0;
+  gap: 9px;
+  padding: 12px 0;
   border-top: 1px solid var(--border);
 }
 
@@ -851,22 +895,22 @@ p {
 
 .readonlySets {
   display: grid;
-  gap: 8px;
+  gap: 7px;
 }
 
 .readonlySet {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 14px;
-  padding: 10px;
+  gap: 7px 12px;
+  padding: 9px;
   border-radius: 8px;
-  background: oklch(98% 0.004 95);
+  background: var(--surface-muted);
 }
 
 .twoCols {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 10px;
 }
 
 .widePanel {
@@ -875,13 +919,13 @@ p {
 
 .metricBuilder {
   display: grid;
-  gap: 10px;
+  gap: 9px;
 }
 
 .metricRow {
   display: grid;
-  grid-template-columns: 1fr 1.25fr 0.7fr 0.9fr 84px 0.7fr 40px;
-  gap: 8px;
+  grid-template-columns: 0.95fr 1.2fr 0.55fr 0.82fr 74px 0.55fr 40px;
+  gap: 7px;
   align-items: center;
 }
 
@@ -893,27 +937,28 @@ p {
 
 .checkLine input {
   width: auto;
+  min-height: 0;
 }
 
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 6px;
 }
 
 .chips span {
   border-radius: 999px;
-  padding: 6px 9px;
-  background: var(--accent-soft);
-  color: var(--ink-soft);
-  font-size: 13px;
+  padding: 5px 8px;
+  background: var(--surface-muted);
+  color: var(--fg);
+  font-size: 12px;
 }
 
 .catalogItem {
   display: flex;
   justify-content: space-between;
   gap: 14px;
-  padding: 14px 0;
+  padding: 12px 0;
   border-top: 1px solid var(--border);
 }
 
@@ -939,16 +984,16 @@ p {
 
 .publicPage {
   display: grid;
-  gap: 18px;
-  max-width: 940px;
+  gap: 14px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 28px;
+  padding: 24px;
 }
 
 .publicHeader {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 @media (max-width: 980px) {
@@ -957,19 +1002,20 @@ p {
   }
 
   .sidebar {
-    position: fixed;
-    top: auto;
-    right: 10px;
-    bottom: 10px;
-    left: 10px;
+    position: sticky;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: auto;
     z-index: 20;
     height: auto;
     flex-direction: row;
     align-items: center;
-    gap: 8px;
-    padding: 8px;
-    border: 1px solid oklch(38% 0.018 70);
-    border-radius: 8px;
+    gap: 6px;
+    padding: 7px;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
     box-shadow: none;
   }
 
@@ -980,7 +1026,7 @@ p {
   .sidebar nav {
     flex: 1;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
+    gap: 5px;
   }
 
   .sidebar nav a,
@@ -988,15 +1034,15 @@ p {
     flex-direction: column;
     justify-content: center;
     gap: 4px;
-    min-height: 58px;
-    padding: 8px 6px;
+    min-height: 56px;
+    padding: 7px 5px;
     font-size: 12px;
     text-align: center;
   }
 
   .ghost {
     margin-top: 0;
-    width: 64px;
+    width: 60px;
   }
 
   .historyGrid,
@@ -1010,7 +1056,7 @@ p {
   }
 
   .content {
-    padding: 16px 14px 94px;
+    padding: 16px 14px;
   }
 
   .addExercisePanel {
@@ -1021,23 +1067,32 @@ p {
 @media (max-width: 620px) {
   .content,
   .publicPage {
-    padding: 14px 12px 94px;
+    padding: 14px 12px;
+  }
+
+  .authLayout {
+    padding: 16px;
+  }
+
+  .authPanel {
+    width: calc(100vw - 32px);
+    padding: 20px;
   }
 
   .page {
-    gap: 14px;
+    gap: 12px;
   }
 
   .pageHeader h1 {
-    font-size: 30px;
+    font-size: 28px;
   }
 
   .emptyState h2 {
-    font-size: 34px;
+    font-size: 26px;
   }
 
   .exerciseHead h2 {
-    font-size: 30px;
+    font-size: 22px;
   }
 
   .sidebar nav {
@@ -1053,24 +1108,21 @@ p {
     flex-direction: column;
   }
 
+  .workoutHero {
+    align-items: stretch;
+  }
+
   .primary,
   .secondary,
   .uploadButton {
     width: 100%;
-    min-height: 48px;
+    min-height: 46px;
   }
 
-  .workoutExercise,
-  .panel,
-  .emptyState,
-  .authPanel,
-  .detailPanel,
-  .listPanel {
-    border-radius: 8px;
-  }
-
-  .workoutHero {
-    gap: 18px;
+  .iconButton,
+  .deleteSetButton.iconOnly {
+    width: 42px;
+    min-height: 42px;
   }
 
   .workoutStats {
@@ -1102,23 +1154,22 @@ p {
   }
 
   .timerPresets,
+  .exerciseTimekeeper .timerPresets,
   .timeActions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .setFields label:nth-child(1),
-  .setFields label:nth-child(2) {
-    grid-column: span 1;
+  .timerPresets button {
+    min-height: 40px;
   }
 
   .inputWithUnit input {
-    min-height: 52px;
+    min-height: 50px;
     font-size: 18px;
     font-weight: 750;
   }
 
-  .noteField,
-  .deleteSetButton {
+  .noteField {
     width: 100%;
   }
 }
